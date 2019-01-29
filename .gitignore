@@ -1,2 +1,8 @@
 .idea
 data/
+log/
+out_graph/
+out_images_BiGAN/
+out_images_Debug/
+out_models_BiGAN/
+tensorboard/
