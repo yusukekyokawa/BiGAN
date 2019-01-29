@@ -47,7 +47,7 @@ def save_graph(x, y, filename, epoch):
     # y axis label
     plt.ylabel("TP / (TP + FN)")
     # save
-    plt.savefig(filename + '_ROC_curve_epoch' + str(epoch) +'.png')
+    plt.savefig(filename + '_ROC_curve_epoch' + str(epoch) + '.png')
     plt.close()
 
 
@@ -88,7 +88,8 @@ def convert_np2pil(images_255):
         image_1_PIL = Image.fromarray(images_255_1)
         list_images_PIL.append(image_1_PIL)
     return list_images_PIL
-    
+
+
 def make_output_img(img_batch_5, img_batch_7, x_z_x_5, x_z_x_7, epoch, log_file_name, out_img_dir):
     (data_num, img1_h, img1_w, _) = img_batch_5.shape
 
@@ -96,19 +97,19 @@ def make_output_img(img_batch_5, img_batch_7, x_z_x_5, x_z_x_7, epoch, log_file_
     img_batch_7_unn = np.tile(unnorm_img(img_batch_7), (1, 1, 3))
     x_z_x_5_unn = np.tile(unnorm_img(x_z_x_5), (1, 1, 3))
     x_z_x_7_unn = np.tile(unnorm_img(x_z_x_7), (1, 1, 3))
-    
+
     diff_5 = img_batch_5 - x_z_x_5
-    diff_5_r = (2.0 * np.maximum(diff_5, 0.0)) - 1.0 #(0.0, 1.0) -> (-1.0, 1.0)
-    diff_5_b = (2.0 * np.abs(np.minimum(diff_5, 0.0))) - 1.0 #(-1.0, 0.0) -> (1.0, 0.0) -> (1.0, -1.0)
+    diff_5_r = (2.0 * np.maximum(diff_5, 0.0)) - 1.0  # (0.0, 1.0) -> (-1.0, 1.0)
+    diff_5_b = (2.0 * np.abs(np.minimum(diff_5, 0.0))) - 1.0  # (-1.0, 0.0) -> (1.0, 0.0) -> (1.0, -1.0)
     diff_5_g = diff_5_b * 0.0 - 1.0
     diff_5_r_unnorm = unnorm_img(diff_5_r)
     diff_5_b_unnorm = unnorm_img(diff_5_b)
     diff_5_g_unnorm = unnorm_img(diff_5_g)
     diff_5_np = np.concatenate((diff_5_r_unnorm, diff_5_g_unnorm, diff_5_b_unnorm), axis=3)
-    
+
     diff_7 = img_batch_7 - x_z_x_7
-    diff_7_r = (2.0 * np.maximum(diff_7, 0.0)) - 1.0 #(0.0, 1.0) -> (-1.0, 1.0)
-    diff_7_b = (2.0 * np.abs(np.minimum(diff_7, 0.0))) - 1.0 #(-1.0, 0.0) -> (1.0, 0.0) -> (1.0, -1.0)
+    diff_7_r = (2.0 * np.maximum(diff_7, 0.0)) - 1.0  # (0.0, 1.0) -> (-1.0, 1.0)
+    diff_7_b = (2.0 * np.abs(np.minimum(diff_7, 0.0))) - 1.0  # (-1.0, 0.0) -> (1.0, 0.0) -> (1.0, -1.0)
     diff_7_g = diff_7_b * 0.0 - 1.0
     diff_7_r_unnorm = unnorm_img(diff_7_r)
     diff_7_b_unnorm = unnorm_img(diff_7_b)
@@ -124,7 +125,8 @@ def make_output_img(img_batch_5, img_batch_7, x_z_x_5, x_z_x_7, epoch, log_file_
 
     wide_image_np = np.ones(((img1_h + 1) * data_num - 1, (img1_w + 1) * 6 - 1, 3), dtype=np.uint8) * 255
     wide_image_PIL = Image.fromarray(wide_image_np)
-    for num, (ori_5, ori_7, xzx5, xzx7, diff5, diff7) in enumerate(zip(img_batch_5_PIL, img_batch_7_PIL ,x_z_x_5_PIL, x_z_x_7_PIL, diff_5_PIL, diff_7_PIL)):
+    for num, (ori_5, ori_7, xzx5, xzx7, diff5, diff7) in enumerate(
+            zip(img_batch_5_PIL, img_batch_7_PIL, x_z_x_5_PIL, x_z_x_7_PIL, diff_5_PIL, diff_7_PIL)):
         wide_image_PIL.paste(ori_5, (0, num * (img1_h + 1)))
         wide_image_PIL.paste(xzx5, (img1_w + 1, num * (img1_h + 1)))
         wide_image_PIL.paste(diff5, ((img1_w + 1) * 2, num * (img1_h + 1)))
@@ -132,16 +134,11 @@ def make_output_img(img_batch_5, img_batch_7, x_z_x_5, x_z_x_7, epoch, log_file_
         wide_image_PIL.paste(xzx7, ((img1_w + 1) * 4, num * (img1_h + 1)))
         wide_image_PIL.paste(diff7, ((img1_w + 1) * 5, num * (img1_h + 1)))
 
-    wide_image_PIL.save(out_img_dir + "/resultImage_"+ log_file_name + '_' + str(epoch) + ".png")
+    wide_image_PIL.save(out_img_dir + "/resultImage_" + log_file_name + '_' + str(epoch) + ".png")
+
 
 def save_list_to_csv(list, filename):
     f = open(filename, 'w')
     writer = csv.writer(f, lineterminator='\n')
     writer.writerows(list)
     f.close()
-
-
-
-
-
-

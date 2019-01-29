@@ -2,6 +2,7 @@ import numpy as np
 import os
 import random
 
+
 class Make_datasets_MNIST():
 
     def __init__(self, file_name, img_width, img_height, seed):
@@ -10,9 +11,9 @@ class Make_datasets_MNIST():
         self.img_height = img_height
         self.seed = seed
         x_train, x_test, x_valid, y_train, y_test, y_valid = self.read_MNIST_npy(self.filename)
-        self.train_np = np.concatenate((y_train.reshape(-1,1), x_train), axis=1).astype(np.float32)
-        self.test_np = np.concatenate((y_test.reshape(-1,1), x_test), axis=1).astype(np.float32)
-        self.valid_np = np.concatenate((y_valid.reshape(-1,1), x_valid), axis=1).astype(np.float32)
+        self.train_np = np.concatenate((y_train.reshape(-1, 1), x_train), axis=1).astype(np.float32)
+        self.test_np = np.concatenate((y_test.reshape(-1, 1), x_test), axis=1).astype(np.float32)
+        self.valid_np = np.concatenate((y_valid.reshape(-1, 1), x_valid), axis=1).astype(np.float32)
         print("self.train_np.shape, ", self.train_np.shape)
         print("self.test_np.shape, ", self.test_np.shape)
         print("self.valid_np.shape, ", self.valid_np.shape)
@@ -28,7 +29,6 @@ class Make_datasets_MNIST():
 
         random.seed(self.seed)
         np.random.seed(self.seed)
-
 
     def read_MNIST_npy(self, filename):
         mnist_npz = np.load(filename)
@@ -48,7 +48,6 @@ class Make_datasets_MNIST():
         y_valid = mnist_npz['y_valid']
         return x_train, x_test, x_valid, y_train, y_test, y_valid
 
-
     def get_file_names(self, dir_name):
         target_files = []
         for root, dirs, files in os.walk(dir_name):
@@ -58,12 +57,10 @@ class Make_datasets_MNIST():
         return target_files
 
     def divide_MNIST_by_digit(self, train_np, data1_num, data2_num):
-        data_1 = train_np[train_np[:,0] == data1_num]
-        data_2 = train_np[train_np[:,0] == data2_num]
+        data_1 = train_np[train_np[:, 0] == data1_num]
+        data_2 = train_np[train_np[:, 0] == data2_num]
 
         return data_1, data_2
-
-
 
     def read_data(self, d_y_np, width, height):
         tars = []
@@ -76,20 +73,17 @@ class Make_datasets_MNIST():
 
         return np.asarray(images), np.asarray(tars)
 
-
     def normalize_data(self, data):
         # data0_2 = data / 127.5
         # data_norm = data0_2 - 1.0
-        data_norm = (data * 2.0) - 1.0 #applied for tanh
+        data_norm = (data * 2.0) - 1.0  # applied for tanh
 
         return data_norm
-
 
     def make_data_for_1_epoch(self):
         self.filename_1_epoch = np.random.permutation(self.train_data_5)
 
         return len(self.filename_1_epoch)
-
 
     def get_data_for_1_batch(self, i, batchsize):
         filename_batch = self.filename_1_epoch[i:i + batchsize]
@@ -108,7 +102,6 @@ class Make_datasets_MNIST():
         # tars = np.zeros((data_num, 1), dtype=np.float32)
         return norms
 
-
     def make_target_1_0(self, value, data_num):
         if value == 0.0:
             target = np.zeros((data_num, 1), dtype=np.float32)
@@ -117,6 +110,7 @@ class Make_datasets_MNIST():
         else:
             print("target value error")
         return target
+
 
 def check_mnist_npz(filename):
     mnist_npz = np.load(filename)
@@ -131,7 +125,7 @@ def check_mnist_npz(filename):
 
 
 if __name__ == '__main__':
-    #debug
+    # debug
     FILE_NAME = './mnist.npz'
     # check_mnist_npz(FILE_NAME)
     # make_datasets = Make_datasets_MNIST(FILE_NAME, 28, 28, 1234, 0.0, 0.2, 6000, 512)
