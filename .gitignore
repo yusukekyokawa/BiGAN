@@ -6,3 +6,8 @@ out_images_BiGAN/
 out_images_Debug/
 out_models_BiGAN/
 tensorboard/
+BIGAN/dataset_path
+BIGAN/images
+BIGAN/learn
+BIGAN/result
+BIGAN/saved_model
