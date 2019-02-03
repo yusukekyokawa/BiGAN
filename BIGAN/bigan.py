@@ -127,6 +127,7 @@ class BIGAN():
         # Adversarial ground truths
         valid = np.ones((batch_size, 1))
         fake = np.zeros((batch_size, 1))
+        # 潜在変数の固定
         for epoch in range(epochs):
 
             # ---------------------

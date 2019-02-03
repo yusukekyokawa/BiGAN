@@ -19,7 +19,7 @@ def log_plotter(train_path, optimizer, epochs, ETA, save_dir):
     with open(save_path, 'a') as f:
         f.write("train paht: {}".format(train_path) + "\n")
         f.write("epoch　は {}".format(epochs) + "\n")
-        f.write("処理にかかった時間は {}".format(str(ETA)) + "[sec]" + '\n')
+        f.write("処理にかかった時間は {}".format(str(ETA)) + '\n')
         f.write(optimizer.get_config() + "\n")
 
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     train_path = "/home/kiyo/Pictures/key_pictures/Dec_18_2018/dataset/2019_0127/train"
     test_path = "/home/kiyo/Pictures/key_pictures/Dec_18_2018/dataset/2019_0127/test"
     batch_size = 16
-    epochs = 4000
+    epochs = 40000
     input_dim = 64
     NUMBER_OF_TESTS = 120
 
@@ -55,9 +55,6 @@ if __name__ == '__main__':
     os.makedirs(save_weight_dir, exist_ok=True)
     d_losses_r, d_losses_f, g_losses = dcgan.train(X_train, epochs, batch_size, save_result_dir, save_weight_dir)
     # ファイル名を時間にする
-    now = datetime.datetime.now()
-    # 実行した日付のついたフォルダをrootにする
-    save_root = os.path.join("./learn", "{0:%Y%m%d-%H%M%S}".format(now))
 
     # lossをcsvに書き込む
     # result, weightsと同じようにファイル名を日付で指定する。
@@ -65,13 +62,13 @@ if __name__ == '__main__':
     os.makedirs(loss_dir, exist_ok=True)
     loss_path = os.path.join(loss_dir, "loss.csv")
     with open(loss_path, 'w') as f:
-        f.write("g_loss,d_loss" + '\n')
+        f.write("g_loss,d_loss_r,d_loss_f" + '\n')
         for g_loss, d_loss_r, d_loss_f in zip(g_losses, d_losses_r, d_losses_f):
             f.write(str(g_loss) + ',' + str(d_loss_r) + str(d_loss_f) + '\n')
 
     # lossのプロット
     # loss_plotter(loss_csv_path=loss_path)
     ETA = datetime.datetime.now() - start_time
-    print("処理にかかった時間は {} ".format(ETA) + "[sec]")
+    print("処理にかかった時間は {} ".format(ETA))
     # 学習に関する記録を保存
-    log_plotter(train_path=train_path, optimizer=Adam, epochs=epochs, ETA=ETA, save_dir=save_root)
+    log_plotter(train_path=train_path, optimizer=optimizer, epochs=epochs, ETA=ETA, save_dir=save_root)
